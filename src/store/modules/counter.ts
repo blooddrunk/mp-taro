@@ -1,21 +1,27 @@
-import { createAction, handleActions } from 'redux-actions';
+import { createActions, handleActions } from 'redux-actions';
 import produce from 'immer';
-import { effects, delay } from 'redux-saga/dist/redux-saga';
+import { put, takeLatest } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
-const { put, takeLatest } = effects;
+export interface CounterState {
+  value: number;
+}
 
 // action creators
-export const increment = createAction('INCREMENT');
-export const decrement = createAction('DECREMENT');
-export const incrementAsync = createAction('INCREMENT_ASYNC');
+export const actions = createActions(
+  {},
+  'INCREMENT',
+  'DECREMENT',
+  'INCREMENT_ASYNC'
+);
 
 // reducer
-export const counter = handleActions(
+export const counter = handleActions<CounterState>(
   {
-    [increment.toString()]: produce(draft => {
+    [actions.increment.toString()]: produce(draft => {
       draft.value += 1;
     }),
-    [decrement.toString()]: produce(draft => {
+    [actions.decrement.toString()]: produce(draft => {
       draft.value -= 1;
     }),
   },
@@ -27,12 +33,12 @@ export function* sagas() {
   // worker
   function* incrementAsyncWorker() {
     yield delay(1000);
-    yield put(increment());
+    yield put(actions.increment());
   }
 
   // watcher
   function* watchIncremetnAsync() {
-    yield takeLatest(incrementAsync.toString(), incrementAsyncWorker);
+    yield takeLatest(actions.incrementAsync.toString(), incrementAsyncWorker);
   }
 
   yield watchIncremetnAsync();

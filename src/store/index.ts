@@ -4,7 +4,7 @@ import createSagaMiddleware, { END } from 'redux-saga/dist/redux-saga';
 
 import { rootReducer } from './modules';
 
-export interface IEnhancedStore extends Store {
+export interface EnhancedStore extends Store {
   runSaga?: (rootSaga?: any) => any;
   close?: () => any;
 }
@@ -19,7 +19,7 @@ export const configureStore = (preloadedState?: object) => {
     middlewares.push(logger);
   }
 
-  const store: IEnhancedStore = createStore(
+  const store: EnhancedStore = createStore(
     rootReducer,
     preloadedState!,
     applyMiddleware(...middlewares)

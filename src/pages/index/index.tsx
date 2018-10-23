@@ -1,39 +1,47 @@
+import { ComponentClass } from 'react';
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text, Button } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import { bindActionCreators } from 'redux';
+import { AtButton, AtToast } from 'taro-ui';
+import { AtToastProps } from 'taro-ui/@types/toast';
 
-import {
-  increment,
-  decrement,
-  incrementAsync,
-} from '../../store/modules/counter';
+import './index.scss';
+import { actions as counterActions } from '../../store/modules/counter';
+import { actions as toastActions, toast } from '../../store/modules/ui/toast';
 
-export interface IIndexProps {
+export interface IndexProps {
   counter: number;
-  handleIncrement: () => any;
-  handleDecrement: () => any;
-  handleIncrementAsync: () => any;
+  toast: AtToastProps;
+  increment: () => any;
+  decrement: () => any;
+  incrementAsync: () => any;
+  showToast: (toast: AtToastProps) => any;
+  hideToast: () => any;
 }
 
 @connect(
-  state => {
+  ({ counter, ui }) => {
     return {
-      counter: state.value,
+      counter: counter.value,
+      toast: ui.toast,
     };
   },
   dispatch =>
     bindActionCreators(
       {
-        handleIncrement: increment,
-        handleDecrement: decrement,
-        handleIncrementAsync: incrementAsync,
+        increment: counterActions.increment,
+        decrement: counterActions.decrement,
+        incrementAsync: counterActions.incrementAsync,
+        showToast: toastActions.showToast,
+        hideToast: toastActions.hideToast,
       },
       dispatch
     )
 )
-export class Index extends Component<IIndexProps, {}> {
+class Index extends Component<IndexProps, {}> {
   config = {
+    addGlobalClass: true,
     navigationBarTitleText: 'Counter',
   };
 
@@ -47,20 +55,56 @@ export class Index extends Component<IIndexProps, {}> {
 
   componentDidHide() {}
 
+  handleShowToast = () => {
+    this.props.showToast({
+      isOpened: true,
+      text: 'this is a success toast',
+      status: 'success',
+      hasMask: true,
+      onClose: this.props.hideToast,
+    });
+  };
+
   render() {
-    const {
-      counter,
-      handleIncrement,
-      handleDecrement,
-      handleIncrementAsync,
-    } = this.props;
+    const { counter, increment, decrement, incrementAsync, toast } = this.props;
     return (
-      <View className="index">
-        <Text>{counter}</Text>
-        <Button onClick={handleIncrement}>+</Button>
-        <Button onClick={handleDecrement}>-</Button>
-        <Button onClick={handleIncrementAsync}>+ after 1s</Button>
+      <View className="Index">
+        <View style={{ textAlign: 'center', marginBottom: 24 }}>
+          <Text>{counter}</Text>
+        </View>
+
+        <View className="Index__Button">
+          <AtButton type="primary" onClick={increment}>
+            +
+          </AtButton>
+        </View>
+
+        <View className="Index__Button">
+          <AtButton type="primary" onClick={decrement}>
+            -
+          </AtButton>
+        </View>
+
+        <View className="Index__Button">
+          <AtButton type="primary" onClick={incrementAsync}>
+            + after 1s
+          </AtButton>
+        </View>
+
+        <View className="Index__Button">
+          <AtButton onClick={this.handleShowToast}>Show Toast</AtButton>
+        </View>
+
+        <AtToast
+          hasMask={toast.hasMask}
+          isOpened={toast.isOpened}
+          onClose={toast.onClose}
+          text={toast.text}
+          status={toast.status}
+        />
       </View>
     );
   }
 }
+
+export default Index as ComponentClass;

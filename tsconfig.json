@@ -16,8 +16,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "rootDir": ".",
-    "jsx": "preserve",
-    "typeRoots": ["node_modules/@types"]
+    "jsx": "preserve"
   },
   "compileOnSave": false
 }
