@@ -2,17 +2,18 @@ import { ComponentClass } from 'react';
 import Taro, { Component } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
-import { bindActionCreators } from 'redux';
-import { AtButton, AtToast } from 'taro-ui';
+import { bindActionCreators, Dispatch } from 'redux';
+import { AtButton } from 'taro-ui';
 import { AtToastProps } from 'taro-ui/@types/toast';
 
 import './index.scss';
-import { actions as counterActions } from '../../store/modules/counter';
-import { actions as toastActions, toast } from '../../store/modules/ui/toast';
+import { counterActions } from '../../store/counter';
+import { toastActions } from '../../store/ui';
+import { RootState, RootAction } from '../../store';
+import Toast from '../../components/UI/Toast';
 
 export interface IndexProps {
   counter: number;
-  toast: AtToastProps;
   increment: () => any;
   decrement: () => any;
   incrementAsync: () => any;
@@ -21,13 +22,12 @@ export interface IndexProps {
 }
 
 @connect(
-  ({ counter, ui }) => {
+  ({ counter }: RootState) => {
     return {
       counter: counter.value,
-      toast: ui.toast,
     };
   },
-  dispatch =>
+  (dispatch: Dispatch<RootAction>) =>
     bindActionCreators(
       {
         increment: counterActions.increment,
@@ -40,6 +40,7 @@ export interface IndexProps {
     )
 )
 class Index extends Component<IndexProps, {}> {
+  R;
   config = {
     addGlobalClass: true,
     navigationBarTitleText: 'Counter',
@@ -56,17 +57,21 @@ class Index extends Component<IndexProps, {}> {
   componentDidHide() {}
 
   handleShowToast = () => {
-    this.props.showToast({
+    const { showToast } = this.props;
+    showToast({
+      duration: 2000,
+      hasMask: true,
       isOpened: true,
       text: 'this is a success toast',
       status: 'success',
-      hasMask: true,
-      onClose: this.props.hideToast,
+      onClose: () => {
+        console.log('why is this not being called');
+      },
     });
   };
 
   render() {
-    const { counter, increment, decrement, incrementAsync, toast } = this.props;
+    const { counter, increment, decrement, incrementAsync } = this.props;
     return (
       <View className="Index">
         <View style={{ textAlign: 'center', marginBottom: 24 }}>
@@ -95,13 +100,7 @@ class Index extends Component<IndexProps, {}> {
           <AtButton onClick={this.handleShowToast}>Show Toast</AtButton>
         </View>
 
-        <AtToast
-          hasMask={toast.hasMask}
-          isOpened={toast.isOpened}
-          onClose={toast.onClose}
-          text={toast.text}
-          status={toast.status}
-        />
+        <Toast />
       </View>
     );
   }

@@ -3,8 +3,8 @@ import '@tarojs/async-await';
 import { Provider } from '@tarojs/redux';
 
 import Index from './pages/index';
-import { configureStore } from './store';
-import { rootSaga } from './store/sagas';
+import { configureStore } from './store/configureStore';
+import { rootSaga } from './store';
 
 import './app.scss';
 

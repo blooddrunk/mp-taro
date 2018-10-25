@@ -1,40 +1,18 @@
-import { createStore, applyMiddleware, Store } from 'redux';
-import thunk from 'redux-thunk';
-import createSagaMiddleware, { END } from 'redux-saga/dist/redux-saga';
+import { combineReducers } from 'redux';
+import { StateType } from 'typesafe-actions';
+import { all } from 'redux-saga/effects';
 
-import { rootReducer } from './modules';
+import { counter, counterSaga, CounterActions } from './counter';
+import { ui, UIActions } from './ui';
 
-export interface EnhancedStore extends Store {
-  runSaga?: (rootSaga?: any) => any;
-  close?: () => any;
+export const root = combineReducers({
+  counter,
+  ui,
+});
+
+export type RootAction = CounterActions | UIActions;
+export type RootState = StateType<typeof root>;
+
+export function* rootSaga() {
+  yield all([counterSaga()]);
 }
-
-export const configureStore = (preloadedState?: object) => {
-  const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [thunk, sagaMiddleware];
-
-  if (process.env.NODE_ENV === 'development') {
-    const { logger } = require('redux-logger');
-
-    middlewares.push(logger);
-  }
-
-  const store: EnhancedStore = createStore(
-    rootReducer,
-    preloadedState!,
-    applyMiddleware(...middlewares)
-  );
-
-  if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
-    module.hot.accept('./modules', () => {
-      const nextRootReducer = require('./modules').default;
-      store.replaceReducer(nextRootReducer);
-    });
-  }
-
-  store.runSaga = sagaMiddleware.run;
-  store.close = () => store.dispatch(END);
-
-  return store;
-};
