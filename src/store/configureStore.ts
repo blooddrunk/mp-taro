@@ -1,10 +1,10 @@
 import { createStore, applyMiddleware, Store } from 'redux';
 import thunk from 'redux-thunk';
-import createSagaMiddleware, { END } from 'redux-saga/dist/redux-saga';
+import createSagaMiddleware, { END } from 'redux-saga';
 
-import { root } from '.';
+import { root, rootSaga, RootState, RootAction } from '.';
 
-export interface EnhancedStore extends Store {
+export interface EnhancedStore extends Store<RootState, RootAction> {
   runSaga?: (rootSaga?: any) => any;
   close?: () => any;
 }
@@ -38,3 +38,6 @@ export const configureStore = (preloadedState?: object) => {
 
   return store;
 };
+
+export const store = configureStore();
+store.runSaga!(rootSaga);

@@ -3,13 +3,9 @@ import '@tarojs/async-await';
 import { Provider } from '@tarojs/redux';
 
 import Index from './pages/index';
-import { configureStore } from './store/configureStore';
-import { rootSaga } from './store';
+import { store } from './store/configureStore';
 
 import './app.scss';
-
-const store = configureStore();
-store.runSaga!(rootSaga);
 
 class App extends Component {
   /**

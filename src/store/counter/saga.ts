@@ -1,7 +1,7 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
-import { increment, incrementAsync } from './actions';
+import { increment, INCREMENT_ASYNC } from './actions';
 
 export function* counterSaga() {
   // worker
@@ -12,7 +12,7 @@ export function* counterSaga() {
 
   // watcher
   function* watchIncremetnAsync() {
-    yield takeLatest(incrementAsync.toString(), incrementAsyncWorker);
+    yield takeLatest(INCREMENT_ASYNC, incrementAsyncWorker);
   }
 
   yield watchIncremetnAsync();

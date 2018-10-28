@@ -9,16 +9,20 @@ export type CounterState = Readonly<{
   value: number;
 }>;
 
-export const counter = produce<CounterState>(
+export const counterInitialState: CounterState = {
+  value: 0,
+};
+
+export const counter = produce<CounterState, CounterActions>(
   (draft, action) => {
     switch (action.type) {
       case getType(actions.increment):
         draft.value += 1;
-        return draft;
+        return;
       case getType(actions.decrement):
         draft.value -= 1;
-        return draft;
+        return;
     }
   },
-  { value: 0 }
+  counterInitialState
 );

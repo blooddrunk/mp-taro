@@ -1,9 +1,9 @@
 module.exports = {
   env: {
-    NODE_ENV: '"development"'
+    NODE_ENV: '"development"',
+    API_ROOT: '"http://localhost:3003"',
   },
-  defineConstants: {
-  },
+  defineConstants: {},
   weapp: {},
-  h5: {}
-}
+  h5: {},
+};

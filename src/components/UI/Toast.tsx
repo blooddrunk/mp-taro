@@ -1,29 +1,32 @@
 import { ComponentClass } from 'react';
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { AtToast } from 'taro-ui';
 import { AtToastProps } from 'taro-ui/@types/toast';
+import { BaseEventFunction } from '@tarojs/components/types/common';
 
-import { RootState } from '../../store';
+import { RootState, RootAction } from '../../store';
 import { toastActions } from '../../store/ui';
 
-export interface ToastInjectedProps {
+export type ToastInjectedProps = {
   toast: AtToastProps;
-  hideToast: () => any;
-}
+  handleClose: BaseEventFunction | undefined;
+  hideToast: typeof toastActions.hideToast;
+};
 
-export interface ToastOwnProps {}
+export type ToastOwnProps = {};
 
-export interface ToastProps extends ToastInjectedProps, ToastOwnProps {}
+export type ToastProps = ToastInjectedProps & ToastOwnProps;
 
 @connect(
-  ({ ui }: RootState) => {
+  ({ ui }: RootState, ownProps: ToastOwnProps) => {
     return {
       toast: ui.toast,
+      handleClose: ui.toast.onClose,
     };
   },
-  dispatch =>
+  (dispatch: Dispatch<RootAction>) =>
     bindActionCreators(
       {
         hideToast: toastActions.hideToast,
@@ -37,16 +40,12 @@ class Toast extends Component<ToastProps> {
   }
 
   handleClose = event => {
-    const {
-      toast: { onClose },
-      hideToast,
-    } = this.props;
+    const { handleClose, hideToast } = this.props;
+
     hideToast();
 
-    if (onClose) {
-      console.log(onClose);
-      // FIXME this doesn't work
-      this.props.toast.onClose!(event);
+    if (handleClose) {
+      handleClose(event);
     }
   };
 
@@ -79,4 +78,4 @@ class Toast extends Component<ToastProps> {
   }
 }
 
-export default Toast as ComponentClass;
+export default Toast as ComponentClass<ToastOwnProps>;
