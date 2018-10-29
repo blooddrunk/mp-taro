@@ -4,6 +4,7 @@ import { store } from '../store/configureStore';
 import { toastActions } from '../store/ui/toast';
 import { authActions, authModels } from '../store/auth';
 import { validateStatus } from './util';
+import { modalActions } from '../store/ui';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -59,32 +60,30 @@ export const login = async () => {
     userInfo = response.userInfo;
   } catch (error) {
     // user rejects
-    // TODO use taro-ui
-    const { cancel } = await Taro.showModal({
-      title: '提示',
-      content: '不登录无法正常使用~\n\n请允许获取您的用户信息...',
-      cancelText: '好的',
-      cancelColor: '#f9635f',
-      confirmText: '不了',
-      confirmColor: '#666666',
-    });
-
-    // user rejects again
-    if (cancel) {
-      const res = await Taro.openSetting();
-      if (res && res.authSetting['scope.userInfo']) {
-        try {
-          const reponse = await Taro.getUserInfo();
-          userInfo = reponse.userInfo;
-        } catch (e) {
-          authorized = false;
-        }
-      } else {
-        authorized = false;
-      }
-    } else {
-      authorized = false;
-    }
+    store.dispatch(
+      modalActions.showModal({
+        title: '提示',
+        content: '不登录无法正常使用~\n\n请允许获取您的用户信息...',
+        cancelText: '好的',
+        confirmText: '不了',
+        onCancel: async () => {
+          const res = await Taro.openSetting();
+          if (res && res.authSetting['scope.userInfo']) {
+            try {
+              const reponse = await Taro.getUserInfo();
+              userInfo = reponse.userInfo;
+            } catch (e) {
+              authorized = false;
+            }
+          } else {
+            authorized = false;
+          }
+        },
+        onClose: () => {
+          authorized = true;
+        },
+      })
+    );
   }
 
   if (!authorized) {

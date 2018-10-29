@@ -3,14 +3,16 @@ import Taro, { Component } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { AtButton } from 'taro-ui';
+import { AtButton, AtAvatar, AtTabBar } from 'taro-ui';
 
 import './index.scss';
+import { RootState, RootAction } from '../../store';
 import { authActions, authModels } from '../../store/auth';
 import { counterActions } from '../../store/counter';
-import { toastActions } from '../../store/ui';
-import { RootState, RootAction } from '../../store';
+import { toastActions, modalActions, tabbarActions } from '../../store/ui';
 import Toast from '../../components/UI/Toast';
+import Modal from '../../components/UI/Modal';
+import Tabbar from '../../components/UI/Tabbar';
 
 export interface IndexProps {
   user: authModels.User;
@@ -21,6 +23,8 @@ export interface IndexProps {
   decrement: typeof counterActions.decrement;
   incrementAsync: typeof counterActions.incrementAsync;
   showToast: typeof toastActions.showToast;
+  showModal: typeof modalActions.showModal;
+  setTabList: typeof tabbarActions.setTabList;
 }
 
 @connect(
@@ -39,6 +43,8 @@ export interface IndexProps {
         decrement: counterActions.decrement,
         incrementAsync: counterActions.incrementAsync,
         showToast: toastActions.showToast,
+        showModal: modalActions.showModal,
+        setTabList: tabbarActions.setTabList,
       },
       dispatch
     )
@@ -46,10 +52,16 @@ export interface IndexProps {
 class Index extends Component<IndexProps, {}> {
   config = {
     addGlobalClass: true,
-    navigationBarTitleText: 'Counter',
+    navigationBarTitleText: 'Index',
   };
 
-  componentWillMount() {}
+  componentWillMount() {
+    this.props.setTabList([
+      { title: '待办事项', iconType: 'bullet-list', text: 'new' },
+      { title: '拍照', iconType: 'camera' },
+      { title: '文件夹', iconType: 'folder', text: '100', max: 99 },
+    ]);
+  }
 
   componentDidMount() {
     this.props.login();
@@ -85,15 +97,42 @@ class Index extends Component<IndexProps, {}> {
     });
   };
 
+  handleShowModal = () => {
+    this.props.showModal({
+      title: 'Some Modal',
+      content: 'with some content\n and some other content',
+      confirmText: 'Confirm',
+      cancelText: 'Cancel',
+      onCancel: () => {
+        this.props.showToast({
+          duration: 1000,
+          text: 'onCancel clicked',
+          hasMask: true,
+        });
+      },
+      onConfirm: () => {
+        this.props.showToast({
+          duration: 1000,
+          text: 'onConfirm clicked',
+          hasMask: true,
+        });
+      },
+    });
+  };
+
   handleLogin = () => {
     this.props.login();
   };
 
   render() {
-    const { isLoginPending, counter } = this.props;
+    const { user, isLoginPending, counter } = this.props;
     return (
       <View className="Index">
-        <View style={{ textAlign: 'center', marginBottom: 24 }}>
+        <View className="Index__Content">
+          <AtAvatar circle image={user.avatarUrl} />
+        </View>
+
+        <View className="Index__Content">
           <Text>{`Counter: ${counter}`}</Text>
         </View>
 
@@ -120,12 +159,18 @@ class Index extends Component<IndexProps, {}> {
         </View>
 
         <View className="Index__Button">
+          <AtButton onClick={this.handleShowModal}>Show Modal</AtButton>
+        </View>
+
+        <View className="Index__Button">
           <AtButton onClick={this.handleLogin} disabled={isLoginPending}>
             Login
           </AtButton>
         </View>
 
+        <Tabbar />
         <Toast />
+        <Modal />
       </View>
     );
   }

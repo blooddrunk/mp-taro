@@ -1,13 +1,13 @@
 import { createStandardAction } from 'typesafe-actions';
 import { Omit } from 'utility-types';
-import { AtToastProps } from 'taro-ui/@types/toast';
+import { AtModalProps } from 'taro-ui/@types/modal';
 
-const SHOW_TOAST = 'ui/SHOW_TOAST';
-const HIDE_TOAST = 'ui/HIDE_TOAST';
+const SHOW_MODAL = 'ui/SHOW_MODAL';
+const HIDE_MODAL = 'ui/HIDE_MODAL';
 
-export const showToast = createStandardAction(SHOW_TOAST).map(
-  (payload: Omit<AtToastProps, 'isOpened'>) => ({
+export const showModal = createStandardAction(SHOW_MODAL).map(
+  (payload: Omit<AtModalProps, 'isOpened'>) => ({
     payload: { isOpened: true, ...payload },
   })
 );
-export const hideToast = createStandardAction(HIDE_TOAST)<void>();
+export const hideModal = createStandardAction(HIDE_MODAL)<void>();

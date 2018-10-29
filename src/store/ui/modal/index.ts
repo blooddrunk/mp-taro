@@ -1,4 +1,6 @@
-import * as toastActions from './actions';
+import * as modalActions from './actions';
+import * as modalModels from './models';
 
 export * from './reducer';
-export { toastActions };
+export { modalActions };
+export { modalModels };

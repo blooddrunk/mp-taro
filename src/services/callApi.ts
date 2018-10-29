@@ -5,7 +5,7 @@ import { toastActions, toastModels } from '../store/ui/toast';
 import { login } from './login';
 import {
   logException,
-  httpExceptionFactory,
+  commonExceptionFactory,
   validateStatus,
   defaultDataTransformer,
 } from './util';
@@ -60,7 +60,7 @@ export const callApi = async (config: ApiConfig) => {
       }
       httpRequest.data.token = token;
     } catch (error) {
-      throw httpExceptionFactory({
+      throw commonExceptionFactory({
         message: 'auth checke failed',
         meta: error,
       });
@@ -141,7 +141,7 @@ export const callApi = async (config: ApiConfig) => {
       store.dispatch(toastActions.showToast(errorConfig));
     }
 
-    throw httpExceptionFactory({
+    throw commonExceptionFactory({
       message: error.message,
       meta: error,
     });

@@ -1,25 +1,25 @@
 import { ActionType, getType } from 'typesafe-actions';
 import produce from 'immer';
-import { AtToastProps } from 'taro-ui/@types/toast';
+import { AtModalProps } from 'taro-ui/@types/modal';
 
 import * as actions from './actions';
 
-export type ToastActions = ActionType<typeof actions>;
+export type ModalActions = ActionType<typeof actions>;
 
-export type ToastState = Readonly<AtToastProps>;
+export type ModalState = Readonly<AtModalProps>;
 
-export const toastInitialState: ToastState = {
+export const modalInitialState: ModalState = {
   isOpened: false,
 };
 
-export const toast = produce<ToastState, ToastActions>((draft, action) => {
+export const modal = produce<ModalState, ModalActions>((draft, action) => {
   switch (action.type) {
-    case getType(actions.showToast):
+    case getType(actions.showModal):
       return {
         ...draft,
         ...action.payload,
-      } as ToastState;
-    case getType(actions.hideToast):
-      return toastInitialState;
+      } as ModalState;
+    case getType(actions.hideModal):
+      return modalInitialState;
   }
-}, toastInitialState);
+}, modalInitialState);

@@ -31,7 +31,7 @@ export const logException = async (
   return error;
 };
 
-export const httpExceptionFactory = async ({
+export const commonExceptionFactory = async ({
   message,
   meta,
   logger = true,
@@ -66,7 +66,7 @@ export const validateStatus = (req: request.Param, res: request.Promised) => {
 
   // network failure
   if (statusCode < 200 || statusCode >= 300) {
-    throw httpExceptionFactory({
+    throw commonExceptionFactory({
       message: `系统错误(${statusCode}`,
       meta: {
         request: req,

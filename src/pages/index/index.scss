@@ -1,5 +1,12 @@
 .Index {
+  display: flex;
+  flex-direction: column;
   padding: 24px;
+
+  &__Content {
+    align-self: center;
+    margin-bottom: 24px;
+  }
 
   &__Button {
     margin-bottom: 16px;
