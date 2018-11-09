@@ -19,11 +19,13 @@ export type ExtraApiConfig = Partial<{
   showIndicator: boolean;
 }>;
 
-export type ApiConfig = string | (request.Param & ExtraApiConfig);
+export type ApiConfig<U> = string | (request.Param<U> & ExtraApiConfig);
 
 const isDev = process.env.NODE_ENV === 'development';
 
-export const callApi = async (config: ApiConfig) => {
+export const callApi = async <T extends any = any, U extends any = any>(
+  config: ApiConfig<U>
+) => {
   if (typeof config === 'string') {
     config = {
       url: config,
@@ -56,7 +58,7 @@ export const callApi = async (config: ApiConfig) => {
       }
 
       if (!httpRequest.data) {
-        httpRequest.data = {};
+        httpRequest.data = {} as U;
       }
       httpRequest.data.token = token;
     } catch (error) {
@@ -92,16 +94,16 @@ export const callApi = async (config: ApiConfig) => {
   }
 
   if (isDev) {
-    console.group(`%s url "%s"`, config.method, config.url);
+    console.group(`%s url "%s"`, config.method || 'GET', config.url);
     console.log(config);
     console.groupEnd();
   }
 
   try {
-    let data;
-    const response = await Taro.request(httpRequest);
+    let data: T;
+    const response = await Taro.request<T, U>(httpRequest);
     if (needValidation) {
-      data = validateStatus(httpRequest, response);
+      data = validateStatus<T>(httpRequest, response);
     } else {
       data = response.data;
     }

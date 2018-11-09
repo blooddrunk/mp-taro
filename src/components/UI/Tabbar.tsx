@@ -3,7 +3,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { AtTabBar } from 'taro-ui';
-import { TabItem } from 'taro-ui/@types/tab-bar';
+import { TabItem, AtTabBarProps } from 'taro-ui/@types/tab-bar';
 
 import { RootState, RootAction } from '../../store';
 import { tabbarActions } from '../../store/ui';
@@ -14,7 +14,9 @@ export type TabbarInjectedProps = {
   selectTabItem: typeof tabbarActions.selectTabItem;
 };
 
-export type TabbarOwnProps = {};
+export type TabbarOwnProps = {
+  onClick?: (index: number) => void;
+};
 
 export type TabbarProps = TabbarInjectedProps & TabbarOwnProps;
 
@@ -35,7 +37,11 @@ export type TabbarProps = TabbarInjectedProps & TabbarOwnProps;
 )
 class Tabbar extends Component<TabbarProps> {
   handleClick = index => {
-    this.props.selectTabItem(index);
+    const { selectTabItem, onClick } = this.props;
+    selectTabItem(index);
+    if (onClick) {
+      onClick(index);
+    }
   };
 
   render() {

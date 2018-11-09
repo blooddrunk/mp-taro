@@ -1,0 +1,14 @@
+.Post {
+  &__Skeleton {
+    display: grid;
+    grid-template-columns: 16px auto 32px;
+    grid-template-rows: 32px auto 32px;
+    grid-template-areas:
+      'avatar header extra'
+      'main main main'
+      'info info info';
+    grid-column-gap: 24px;
+    grid-row-gap: 16px;
+    padding: 16px;
+  }
+}

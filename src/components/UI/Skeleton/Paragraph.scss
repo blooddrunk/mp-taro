@@ -1,0 +1,10 @@
+.Skeleton {
+  &__Paragraph {
+    padding-top: 16px;
+    padding-bottom: 16px;
+
+    > .Skeleton__Shape + .Skeleton__Shape {
+      margin-top: 8px;
+    }
+  }
+}

@@ -23,9 +23,13 @@ export const authIntialState: AuthState = {
 export const auth = produce<AuthState, AuthActions>((draft, action) => {
   switch (action.type) {
     case getType(authActions.loginActions.request):
-      return authIntialState;
+      return {
+        ...authIntialState,
+        isLoginPending: true,
+      };
     case getType(authActions.loginActions.success):
       draft.user = action.payload;
+      draft.isLoginPending = false;
       return;
     case getType(authActions.loginActions.failure):
       draft.loginError = action.payload;

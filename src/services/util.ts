@@ -61,7 +61,10 @@ export const defaultExceptionLogger = async (error: HttpException) => {
 
 export const defaultDataTransformer: (any) => any = data => data;
 
-export const validateStatus = (req: request.Param, res: request.Promised) => {
+export const validateStatus = <T extends any = any>(
+  req: request.Param,
+  res: request.Promised<T>
+) => {
   const { statusCode = 200, data } = res;
 
   // network failure

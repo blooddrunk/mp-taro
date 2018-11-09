@@ -1,0 +1,27 @@
+@import '../../../theme/variables';
+
+.Skeleton {
+  &__Shape {
+    background-color: $skeleton-color;
+    background-image: linear-gradient(
+      to right,
+      $skeleton-color,
+      $skeleton-color-contrast,
+      $skeleton-color
+    );
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    background-position: 150% 0;
+    line-height: 1;
+    animation: loading 2s ease-in-out infinite;
+  }
+}
+
+@keyframes loading {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -150% 0;
+  }
+}

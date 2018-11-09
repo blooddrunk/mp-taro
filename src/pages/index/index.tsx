@@ -3,7 +3,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { AtButton, AtAvatar, AtTabBar } from 'taro-ui';
+import { AtButton, AtAvatar } from 'taro-ui';
 
 import './index.scss';
 import { RootState, RootAction } from '../../store';
@@ -59,7 +59,7 @@ class Index extends Component<IndexProps, {}> {
     this.props.setTabList([
       { title: '待办事项', iconType: 'bullet-list', text: 'new' },
       { title: '拍照', iconType: 'camera' },
-      { title: '文件夹', iconType: 'folder', text: '100', max: 99 },
+      { title: 'Posts', iconType: 'folder', text: '100', max: 99 },
     ]);
   }
 
@@ -92,7 +92,7 @@ class Index extends Component<IndexProps, {}> {
       text: 'this is a success toast',
       status: 'success',
       onClose: () => {
-        console.log('why is this not being called');
+        console.log('toast shown');
       },
     });
   };
@@ -122,6 +122,24 @@ class Index extends Component<IndexProps, {}> {
 
   handleLogin = () => {
     this.props.login();
+  };
+
+  handleNavigate = () => {
+    Taro.navigateTo({
+      url: '/pages/posts/index',
+    });
+  };
+
+  handleTabbarChange = index => {
+    if (index === 2) {
+      Taro.redirectTo({
+        url: '/pages/posts/index',
+      });
+    } else {
+      Taro.redirectTo({
+        url: '/pages/index/index',
+      });
+    }
   };
 
   render() {
@@ -168,7 +186,11 @@ class Index extends Component<IndexProps, {}> {
           </AtButton>
         </View>
 
-        <Tabbar />
+        <View className="Index__Button">
+          <AtButton onClick={this.handleNavigate}>Go To Posts</AtButton>
+        </View>
+
+        <Tabbar onClick={this.handleTabbarChange} />
         <Toast />
         <Modal />
       </View>
