@@ -64,8 +64,8 @@ export const login = async () => {
       modalActions.showModal({
         title: '提示',
         content: '不登录无法正常使用~\n\n请允许获取您的用户信息...',
-        cancelText: '好的',
-        confirmText: '不了',
+        cancelText: '不了',
+        confirmText: '好的',
         onCancel: async () => {
           const res = await Taro.openSetting();
           if (res && res.authSetting['scope.userInfo']) {

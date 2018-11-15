@@ -13,7 +13,7 @@ export type TabbarState = Readonly<{
 
 export const tabbarInitialState: TabbarState = {
   tabList: [],
-  current: 1,
+  current: -1,
 };
 
 export const tabbar = produce<TabbarState, TabbarActions>((draft, action) => {

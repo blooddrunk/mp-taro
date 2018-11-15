@@ -8,7 +8,7 @@ import { AtCard } from 'taro-ui';
 import './index.scss';
 import { RootState, RootAction } from '../../store';
 import { postsActions, postsModels } from '../../store/posts';
-import Skeleton from '../../components/Posts/Skeleton';
+import TabbarProvider from '../../components/UI/TabbarProvider';
 
 export interface PostsProps {
   posts: postsModels.Post[];
@@ -46,13 +46,11 @@ class Posts extends Component<PostsProps, {}> {
   render() {
     const { posts, loading } = this.props;
     return (
-      <View className="Post">
-        {posts.map(post =>
-          loading ? (
-            <Skeleton key={post.id} />
-          ) : (
+      <TabbarProvider>
+        <View className="Posts">
+          {posts.map(post => (
             <AtCard
-              className="Post__Card"
+              className="Post"
               key={post.id}
               extra={post.author}
               isFull
@@ -62,9 +60,9 @@ class Posts extends Component<PostsProps, {}> {
             >
               {post.description}
             </AtCard>
-          )
-        )}
-      </View>
+          ))}
+        </View>
+      </TabbarProvider>
     );
   }
 }

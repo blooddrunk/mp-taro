@@ -3,7 +3,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { AtTabBar } from 'taro-ui';
-import { TabItem, AtTabBarProps } from 'taro-ui/@types/tab-bar';
+import { TabItem } from 'taro-ui/@types/tab-bar';
 
 import { RootState, RootAction } from '../../store';
 import { tabbarActions } from '../../store/ui';
