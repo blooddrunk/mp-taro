@@ -37,7 +37,7 @@ export const callApi = async <T extends any = any, U extends any = any>(
     needValidation = true,
     needAuth = true,
     showError = true,
-    showLoading = true,
+    showLoading = false,
     showIndicator = true,
     ...httpRequest
   } = config;
@@ -50,12 +50,12 @@ export const callApi = async <T extends any = any, U extends any = any>(
         await login();
       }
 
-      try {
-        await Taro.checkSession();
-      } catch (error) {
-        logException(error, true);
-        await login();
-      }
+      // try {
+      //   await Taro.checkSession();
+      // } catch (error) {
+      //   logException(error, true);
+      //   await login();
+      // }
 
       if (!httpRequest.data) {
         httpRequest.data = {} as U;

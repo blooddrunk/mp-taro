@@ -10,6 +10,7 @@ export type ToastState = Readonly<AtToastProps>;
 
 export const toastInitialState: ToastState = {
   isOpened: false,
+  hasMask: true,
 };
 
 export const toast = produce<ToastState, ToastActions>((draft, action) => {

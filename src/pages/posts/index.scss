@@ -1,5 +1,11 @@
+@import '../../theme/variables';
+
 .Posts {
+  background-color: $background-color-secondary;
+
   .Post.at-card {
-    border-top: none !important;
+    margin-bottom: 32px;
+    border-top: none;
+    border-bottom: none;
   }
 }

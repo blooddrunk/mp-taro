@@ -8,11 +8,12 @@ import { AtCard } from 'taro-ui';
 import './index.scss';
 import { RootState, RootAction } from '../../store';
 import { postsActions, postsModels } from '../../store/posts';
-import TabbarProvider from '../../components/UI/TabbarProvider';
+import ListLoader from '../../components/UI/ListLoader';
 
 export interface PostsProps {
   posts: postsModels.Post[];
   loading: boolean;
+  total: number;
   error: Error | null;
   fetchPosts: typeof postsActions.request;
 }
@@ -22,6 +23,7 @@ export interface PostsProps {
     return {
       posts: posts.items,
       loading: posts.loading,
+      total: posts.total,
       error: posts.error,
     };
   },
@@ -37,32 +39,58 @@ class Posts extends Component<PostsProps, {}> {
   config = {
     addGlobalClass: true,
     navigationBarTitleText: 'Posts',
+    enablePullDownRefresh: true,
+  };
+
+  componentWillReceiveProps = ({ loading, error }: PostsProps) => {
+    if (loading && !this.props.loading) {
+      Taro.stopPullDownRefresh();
+    }
   };
 
   componentDidMount = () => {
-    this.props.fetchPosts();
+    this.props.fetchPosts({
+      shouldClearItems: true,
+    });
+  };
+
+  onPullDownRefresh = () => {
+    this.props.fetchPosts({
+      shouldClearItems: true,
+    });
+  };
+
+  onReachBottom = () => {
+    this.props.fetchPosts({
+      shouldClearItems: false,
+    });
   };
 
   render() {
-    const { posts, loading } = this.props;
+    const { posts, loading, total } = this.props;
+    const length = posts.length;
+
     return (
-      <TabbarProvider>
-        <View className="Posts">
-          {posts.map(post => (
-            <AtCard
-              className="Post"
-              key={post.id}
-              extra={post.author}
-              isFull
-              note={post.updatedAt.toString()}
-              thumb={post.thumbnail}
-              title={post.title}
-            >
-              {post.description}
-            </AtCard>
-          ))}
-        </View>
-      </TabbarProvider>
+      <View className="Posts">
+        {posts.map(post => (
+          <AtCard
+            className="Post"
+            key={post.id}
+            extra={post.author}
+            isFull
+            note={post.updatedAt.toString()}
+            thumb={post.thumbnail}
+            title={post.title}
+          >
+            {post.description}
+          </AtCard>
+        ))}
+        <ListLoader
+          loading={loading}
+          hasReachedEnd={length === total}
+          empty={length === 0}
+        />
+      </View>
     );
   }
 }

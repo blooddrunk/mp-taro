@@ -1,0 +1,13 @@
+@import '../../../theme/variables';
+
+.ListLoader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+
+  &__Text {
+    color: $text-color-hint;
+    font-size: 28px;
+  }
+}

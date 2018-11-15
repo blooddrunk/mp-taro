@@ -4,10 +4,10 @@ import { View } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import './index.scss';
+import './Provider.scss';
 import { RootState, RootAction } from '../../../store';
 import { tabbarActions } from '../../../store/ui';
-import Tabbar from '../../../components/UI/Tabbar';
+import Tabbar from '.';
 
 export type TabbarProviderInjectedProps = {
   currentTabbar: number;

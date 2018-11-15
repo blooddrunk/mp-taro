@@ -5,8 +5,8 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { AtTabBar } from 'taro-ui';
 import { TabItem } from 'taro-ui/@types/tab-bar';
 
-import { RootState, RootAction } from '../../store';
-import { tabbarActions } from '../../store/ui';
+import { RootState, RootAction } from '../../../store';
+import { tabbarActions } from '../../../store/ui';
 
 export type TabbarInjectedProps = {
   tabList: TabItem[];

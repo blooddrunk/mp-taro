@@ -6,8 +6,8 @@ import { AtToast } from 'taro-ui';
 import { AtToastProps } from 'taro-ui/@types/toast';
 import { BaseEventFunction } from '@tarojs/components/types/common';
 
-import { RootState, RootAction } from '../../store';
-import { toastActions } from '../../store/ui';
+import { RootState, RootAction } from '../../../store';
+import { toastActions } from '../../../store/ui';
 
 export type ToastInjectedProps = {
   toast: AtToastProps;

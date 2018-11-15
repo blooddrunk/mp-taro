@@ -18,10 +18,17 @@ class App extends Component {
   config: Config = {
     pages: ['pages/index/index', 'pages/posts/index'],
     window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
+      backgroundTextStyle: 'dark',
+      navigationBarBackgroundColor: '#6190e8',
       navigationBarTitleText: 'Hi, There',
-      navigationBarTextStyle: 'black',
+      navigationBarTextStyle: 'white',
+    },
+    tabBar: {
+      selectedColor: '#6190e8',
+      list: [
+        { pagePath: 'pages/index/index', text: 'Index' },
+        { pagePath: 'pages/posts/index', text: 'Posts' },
+      ],
     },
   };
 

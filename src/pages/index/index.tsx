@@ -10,9 +10,7 @@ import { RootState, RootAction } from '../../store';
 import { authActions, authModels } from '../../store/auth';
 import { counterActions } from '../../store/counter';
 import { toastActions, modalActions } from '../../store/ui';
-import TabbarProvider from '../../components/UI/TabbarProvider';
-import Toast from '../../components/UI/Toast';
-import Modal from '../../components/UI/Modal';
+import UIProvider from '../../components/UI/Provider';
 
 export interface IndexProps {
   user: authModels.User;
@@ -115,7 +113,7 @@ class Index extends Component<IndexProps, {}> {
   };
 
   handleNavigate = () => {
-    Taro.navigateTo({
+    Taro.switchTab({
       url: '/pages/posts/index',
     });
   };
@@ -123,7 +121,7 @@ class Index extends Component<IndexProps, {}> {
   render() {
     const { user, isLoginPending, counter } = this.props;
     return (
-      <TabbarProvider>
+      <UIProvider>
         <View className="Index">
           <View className="Index__Content">
             <AtAvatar circle image={user.avatarUrl} />
@@ -168,11 +166,8 @@ class Index extends Component<IndexProps, {}> {
           <View className="Index__Button">
             <AtButton onClick={this.handleNavigate}>Go To Posts</AtButton>
           </View>
-
-          <Toast />
-          <Modal />
         </View>
-      </TabbarProvider>
+      </UIProvider>
     );
   }
 }

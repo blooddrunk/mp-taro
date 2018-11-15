@@ -6,9 +6,9 @@ import { AtModal } from 'taro-ui';
 import { AtModalProps } from 'taro-ui/@types/modal';
 import { BaseEventFunction } from '@tarojs/components/types/common';
 
-import { RootState, RootAction } from '../../store';
-import { modalActions } from '../../store/ui';
-import { commonExceptionFactory } from '../../services';
+import { RootState, RootAction } from '../../../store';
+import { modalActions } from '../../../store/ui';
+import { commonExceptionFactory } from '../../../services';
 
 export type ModalInjectedProps = {
   modal: AtModalProps;

@@ -7,6 +7,10 @@ export type Post = {
   thumbnail?: string;
 };
 
+export type PostRequest = {
+  shouldClearItems: boolean;
+};
+
 export type PostResponse = {
   items: Post[];
   total: number;
