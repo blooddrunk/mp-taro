@@ -1,4 +1,5 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select, cancelled } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
 import { RootState } from '..';
 import { PostsState } from '../posts';
@@ -10,6 +11,9 @@ export function* postsSaga() {
   // worker
   function* fetchPosts() {
     try {
+      // add some delay
+      yield delay(1000);
+
       const { nextPage, pageSize }: PostsState = yield select<RootState>(
         state => state.posts
       );
@@ -23,6 +27,9 @@ export function* postsSaga() {
       yield put(postsActions.success(response));
       return response;
     } catch (error) {
+      if (yield cancelled()) {
+        // TODO task has been cancelled but Taro doesn't support request aborting
+      }
       yield put(postsActions.failure(error));
     }
   }

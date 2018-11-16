@@ -34,8 +34,5 @@ export const auth = produce<AuthState, AuthActions>((draft, action) => {
     case getType(authActions.loginActions.failure):
       draft.loginError = action.payload;
       return;
-    case getType(authActions.setAuthToken):
-      draft.user.authToken = action.payload;
-      return;
   }
 }, authIntialState);

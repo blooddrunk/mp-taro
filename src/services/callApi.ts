@@ -1,10 +1,11 @@
 import Taro, { request } from '@tarojs/taro';
+// import { CANCEL  } from 'redux-saga';
 
 import { store } from '../store/configureStore';
 import { toastActions, toastModels } from '../store/ui/toast';
-import { login } from './login';
+import { login, LOGIN_AUTH_KEY } from './login';
 import {
-  logException,
+  // logException,
   commonExceptionFactory,
   validateStatus,
   defaultDataTransformer,
@@ -44,7 +45,7 @@ export const callApi = async <T extends any = any, U extends any = any>(
 
   if (needAuth) {
     try {
-      const token = store.getState().auth.user.authToken;
+      const token = Taro.getStorageSync(LOGIN_AUTH_KEY);
 
       if (!token) {
         await login();
@@ -101,7 +102,12 @@ export const callApi = async <T extends any = any, U extends any = any>(
 
   try {
     let data: T;
-    const response = await Taro.request<T, U>(httpRequest);
+    const requestTask: Promise<request.Promised<T>> = Taro.request<T, U>(
+      httpRequest
+    );
+    // requestTask[CANCEL] = requestTask.abort();
+
+    const response = await requestTask;
     if (needValidation) {
       data = validateStatus<T>(httpRequest, response);
     } else {

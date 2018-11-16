@@ -7,7 +7,6 @@ export interface HttpException extends Error {
 }
 
 // TODO a real logger
-
 export const logException = async (
   error: HttpException,
   logger: ExceptionLogger

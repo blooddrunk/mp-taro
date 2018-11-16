@@ -13,7 +13,9 @@ import ListLoader from '../../components/UI/ListLoader';
 export interface PostsProps {
   posts: postsModels.Post[];
   loading: boolean;
+  currentSize: number;
   total: number;
+  hasMore: boolean;
   error: Error | null;
   fetchPosts: typeof postsActions.request;
 }
@@ -23,7 +25,9 @@ export interface PostsProps {
     return {
       posts: posts.items,
       loading: posts.loading,
+      currentSize: posts.currentSize,
       total: posts.total,
+      hasMore: posts.hasMore,
       error: posts.error,
     };
   },
@@ -67,8 +71,7 @@ class Posts extends Component<PostsProps, {}> {
   };
 
   render() {
-    const { posts, loading, total } = this.props;
-    const length = posts.length;
+    const { posts, loading, currentSize, total, hasMore } = this.props;
 
     return (
       <View className="Posts">
@@ -87,8 +90,8 @@ class Posts extends Component<PostsProps, {}> {
         ))}
         <ListLoader
           loading={loading}
-          hasReachedEnd={length === total}
-          empty={length === 0}
+          hasReachedEnd={!hasMore}
+          empty={currentSize <= 0}
         />
       </View>
     );

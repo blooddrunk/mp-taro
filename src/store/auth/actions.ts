@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
+import { createAsyncAction } from 'typesafe-actions';
 
 import { User } from './models';
 
@@ -12,5 +12,3 @@ export const loginActions = createAsyncAction(
   LOGIN_SUCCESS,
   LOGIN_FAILURE
 )<void, User, Error>();
-
-export const setAuthToken = createStandardAction(SET_AUTH_TOKEN)<string>();

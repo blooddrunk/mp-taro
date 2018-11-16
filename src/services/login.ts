@@ -2,14 +2,20 @@ import Taro, { request } from '@tarojs/taro';
 
 import { store } from '../store/configureStore';
 import { toastActions } from '../store/ui/toast';
-import { authActions, authModels } from '../store/auth';
+import { authModels } from '../store/auth';
 import { validateStatus } from './util';
 import { modalActions } from '../store/ui';
 
 const isDev = process.env.NODE_ENV === 'development';
 
+export const LOGIN_AUTH_KEY = 'LOGIN_AUTH_KEY';
+
 export type LoginRequest = authModels.User & {
   code?: string;
+};
+
+export type LoginResponse = {
+  token?: string;
 };
 
 const onLoginFailure = async error => {
@@ -110,7 +116,9 @@ export const login = async () => {
       dataType: 'json',
       data: userInfo,
     };
-    const response = await Taro.request(loginRequest);
+    const response = await Taro.request<LoginResponse, LoginRequest>(
+      loginRequest
+    );
     const data = validateStatus(loginRequest, response);
 
     if (isDev) {
@@ -119,7 +127,8 @@ export const login = async () => {
       console.groupEnd();
     }
 
-    store.dispatch(authActions.setAuthToken(data));
+    // store token
+    Taro.setStorageSync(LOGIN_AUTH_KEY, data.token);
 
     store.dispatch(
       toastActions.showToast({
