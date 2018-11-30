@@ -9,6 +9,7 @@ import './index.scss';
 import { RootState, RootAction } from '../../store';
 import { postsActions, postsModels } from '../../store/posts';
 import ListLoader from '../../components/UI/ListLoader';
+import PostsSkeleton from '../../components/Posts/Skeleton';
 
 export interface PostsProps {
   posts: postsModels.Post[];
@@ -46,7 +47,7 @@ class Posts extends Component<PostsProps, {}> {
     enablePullDownRefresh: true,
   };
 
-  componentWillReceiveProps = ({ loading, error }: PostsProps) => {
+  componentWillReceiveProps = ({ loading }: PostsProps) => {
     if (loading && !this.props.loading) {
       Taro.stopPullDownRefresh();
     }
@@ -71,28 +72,37 @@ class Posts extends Component<PostsProps, {}> {
   };
 
   render() {
-    const { posts, loading, currentSize, total, hasMore } = this.props;
+    const { posts, loading, currentSize, hasMore } = this.props;
+    const isFirsttimeLoading = loading && currentSize === 0;
 
     return (
-      <View className="Posts">
-        {posts.map(post => (
-          <AtCard
-            className="Post"
-            key={post.id}
-            extra={post.author}
-            isFull
-            note={post.updatedAt.toString()}
-            thumb={post.thumbnail}
-            title={post.title}
-          >
-            {post.description}
-          </AtCard>
-        ))}
-        <ListLoader
-          loading={loading}
-          hasReachedEnd={!hasMore}
-          empty={currentSize <= 0}
-        />
+      <View>
+        {isFirsttimeLoading ? (
+          <PostsSkeleton />
+        ) : (
+          <View className="Posts">
+            {posts.map(post => {
+              return (
+                <AtCard
+                  className="Post"
+                  key={post.id}
+                  extra={post.author}
+                  isFull
+                  note={post.updatedAt.toString()}
+                  thumb={post.thumbnail}
+                  title={post.title}
+                >
+                  {post.description}
+                </AtCard>
+              );
+            })}
+            <ListLoader
+              loading={loading}
+              hasReachedEnd={!hasMore}
+              empty={currentSize <= 0}
+            />
+          </View>
+        )}
       </View>
     );
   }

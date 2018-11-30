@@ -4,12 +4,8 @@ import Taro, { request } from '@tarojs/taro';
 import { store } from '../store/configureStore';
 import { toastActions, toastModels } from '../store/ui/toast';
 import { login, LOGIN_AUTH_KEY } from './login';
-import {
-  // logException,
-  commonExceptionFactory,
-  validateStatus,
-  defaultDataTransformer,
-} from './util';
+import { validateStatus, defaultDataTransformer } from './helpers';
+import { HTTPError } from '../utils/errors';
 
 export type ExtraApiConfig = Partial<{
   tranformData: boolean | ((any) => any);
@@ -63,10 +59,7 @@ export const callApi = async <T extends any = any, U extends any = any>(
       }
       httpRequest.data.token = token;
     } catch (error) {
-      throw commonExceptionFactory({
-        message: 'auth checke failed',
-        meta: error,
-      });
+      throw new HTTPError('login failed');
     }
   }
 
@@ -149,10 +142,7 @@ export const callApi = async <T extends any = any, U extends any = any>(
       store.dispatch(toastActions.showToast(errorConfig));
     }
 
-    throw commonExceptionFactory({
-      message: error.message,
-      meta: error,
-    });
+    throw new HTTPError(error.message);
   } finally {
     if (showLoading) {
       store.dispatch(toastActions.hideToast());

@@ -33,6 +33,7 @@ export const auth = produce<AuthState, AuthActions>((draft, action) => {
       return;
     case getType(authActions.loginActions.failure):
       draft.loginError = action.payload;
+      draft.isLoginPending = false;
       return;
   }
 }, authIntialState);

@@ -3,8 +3,10 @@ import Taro, { request } from '@tarojs/taro';
 import { store } from '../store/configureStore';
 import { toastActions } from '../store/ui/toast';
 import { authModels } from '../store/auth';
-import { validateStatus } from './util';
+import { validateStatus } from './helpers';
 import { modalActions } from '../store/ui';
+
+import { HTTPError } from '../utils/errors';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -18,7 +20,7 @@ export type LoginResponse = {
   token?: string;
 };
 
-const onLoginFailure = async error => {
+const loginFailure = (message: string, statusCode?: string | number) => {
   store.dispatch(
     toastActions.showToast({
       text: '登录失败',
@@ -32,12 +34,9 @@ const onLoginFailure = async error => {
     delta: 0,
   });
 
-  if (isDev) {
-    console.error(error);
-  }
-
-  // TODO re-throw error maybe?
-  // throw error;
+  const loginError = new HTTPError(message, statusCode);
+  loginError.logError();
+  return loginError;
 };
 
 export const login = async () => {
@@ -54,7 +53,7 @@ export const login = async () => {
       console.groupEnd();
     }
   } catch (error) {
-    onLoginFailure(error);
+    throw loginFailure(error);
   }
 
   let authorized = true;
@@ -93,8 +92,7 @@ export const login = async () => {
   }
 
   if (!authorized) {
-    onLoginFailure(new Error('user refuses to authorize, login failed'));
-    return;
+    throw loginFailure('user refuses to authorize, login failed');
   }
 
   userInfo = userInfo || {};
@@ -106,16 +104,16 @@ export const login = async () => {
     console.groupEnd();
   }
 
-  // app login
+  // TODO real api
+  const url = `${process.env.API_ROOT}/login`;
+  const loginRequest: request.Param = {
+    url,
+    method: 'GET',
+    dataType: 'json',
+    data: userInfo,
+  };
+
   try {
-    // TODO real api
-    const url = `${process.env.API_ROOT}/login`;
-    const loginRequest: request.Param = {
-      url,
-      method: 'GET',
-      dataType: 'json',
-      data: userInfo,
-    };
     const response = await Taro.request<LoginResponse, LoginRequest>(
       loginRequest
     );
@@ -129,18 +127,21 @@ export const login = async () => {
 
     // store token
     Taro.setStorageSync(LOGIN_AUTH_KEY, data.token);
-
-    store.dispatch(
-      toastActions.showToast({
-        text: '登录成功',
-        duration: 1000,
-        status: 'success',
-        hasMask: true,
-      })
-    );
   } catch (error) {
-    onLoginFailure(error);
+    throw loginFailure(
+      error.message,
+      error instanceof HTTPError ? error.statusCode : ''
+    );
   }
+
+  store.dispatch(
+    toastActions.showToast({
+      text: '登录成功',
+      duration: 1000,
+      status: 'success',
+      hasMask: true,
+    })
+  );
 
   return userInfo;
 };

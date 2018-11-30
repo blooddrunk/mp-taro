@@ -22,6 +22,7 @@ export function* postsSaga() {
         data: {
           _page: nextPage,
           _limit: pageSize,
+          _delay: 3000,
         },
       });
       yield put(postsActions.success(response));

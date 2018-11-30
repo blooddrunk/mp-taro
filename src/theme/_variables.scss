@@ -12,10 +12,10 @@ $color-warning: #ffc82c;
 $color-info: #78a4fa;
 
 $background-color-primary: #fff;
-$background-color-secondary: #fafafa;
+$background-color-secondary: darken($background-color-primary, 5%);
 
 $text-color-primary: rgba(0, 0, 0, 0.87);
-$text-color-sencondary: rgba(0, 0, 0, 0.54);
+$text-color-secondary: rgba(0, 0, 0, 0.54);
 $text-color-hint: rgba(0, 0, 0, 0.38);
 $text-color-disabled: rgba(0, 0, 0, 0.38);
 $text-color-contrast: #fff;

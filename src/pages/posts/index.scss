@@ -3,9 +3,11 @@
 .Posts {
   background-color: $background-color-secondary;
 
-  .Post.at-card {
-    margin-bottom: 32px;
-    border-top: none;
-    border-bottom: none;
+  .Post {
+    &.at-card {
+      margin-bottom: 32px;
+      border-top: none;
+      border-bottom: none;
+    }
   }
 }

@@ -1,14 +1,47 @@
-.Post {
-  &__Skeleton {
-    display: grid;
-    grid-template-columns: 16px auto 32px;
-    grid-template-rows: 32px auto 32px;
-    grid-template-areas:
-      'avatar header extra'
-      'main main main'
-      'info info info';
-    grid-column-gap: 24px;
-    grid-row-gap: 16px;
-    padding: 16px;
+@import '../../theme/variables';
+
+.Post-Skeleton {
+  display: grid;
+  grid-template-columns: 1em auto 3em;
+  grid-template-rows: 1em auto 1em;
+  grid-template-areas:
+    'avatar header extra'
+    'main main main'
+    'info info info';
+  grid-column-gap: 24px;
+  grid-row-gap: 16px;
+  padding: 32px;
+  margin-bottom: 16px;
+  background-color: $background-color-primary;
+
+  &__Avatar {
+    grid-area: avatar;
+  }
+
+  &__Header {
+    grid-area: header;
+  }
+
+  &__Extra {
+    grid-area: extra;
+  }
+
+  &__Main {
+    grid-area: main;
+    padding-top: 16px;
+    padding-bottom: 8px;
+
+    > view {
+      height: 0.8em;
+      margin-bottom: 8px;
+
+      &:nth-child(2) {
+        width: 80%;
+      }
+    }
+  }
+
+  &__Info {
+    grid-area: info;
   }
 }
