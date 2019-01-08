@@ -13,7 +13,7 @@ export const toastInitialState: ToastState = {
   hasMask: true,
 };
 
-export const toast = produce<ToastState, ToastActions>((draft, action) => {
+export const toast = produce((draft, action: ToastActions) => {
   switch (action.type) {
     case getType(actions.showToast):
       return {

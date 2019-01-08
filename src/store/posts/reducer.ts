@@ -30,7 +30,7 @@ export const postsIntialState: PostsState = {
   shouldClearItems: false,
 };
 
-export const posts = produce<PostsState, PostsActions>((draft, action) => {
+export const posts = produce((draft, action: PostsActions) => {
   switch (action.type) {
     case getType(postsActions.request):
       draft.loading = true;

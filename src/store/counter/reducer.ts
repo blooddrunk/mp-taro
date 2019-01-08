@@ -13,16 +13,13 @@ export const counterInitialState: CounterState = {
   value: 0,
 };
 
-export const counter = produce<CounterState, CounterActions>(
-  (draft, action) => {
-    switch (action.type) {
-      case getType(actions.increment):
-        draft.value += 1;
-        return;
-      case getType(actions.decrement):
-        draft.value -= 1;
-        return;
-    }
-  },
-  counterInitialState
-);
+export const counter = produce((draft, action: CounterActions) => {
+  switch (action.type) {
+    case getType(actions.increment):
+      draft.value += 1;
+      return;
+    case getType(actions.decrement):
+      draft.value -= 1;
+      return;
+  }
+}, counterInitialState);

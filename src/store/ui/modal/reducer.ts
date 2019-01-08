@@ -12,7 +12,7 @@ export const modalInitialState: ModalState = {
   isOpened: false,
 };
 
-export const modal = produce<ModalState, ModalActions>((draft, action) => {
+export const modal = produce((draft, action: ModalActions) => {
   switch (action.type) {
     case getType(actions.showModal):
       return {

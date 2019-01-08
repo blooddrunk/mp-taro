@@ -16,7 +16,7 @@ export const tabbarInitialState: TabbarState = {
   current: -1,
 };
 
-export const tabbar = produce<TabbarState, TabbarActions>((draft, action) => {
+export const tabbar = produce((draft, action: TabbarActions) => {
   switch (action.type) {
     case getType(actions.setTabList):
       draft.tabList = action.payload;

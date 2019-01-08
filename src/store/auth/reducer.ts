@@ -20,7 +20,7 @@ export const authIntialState: AuthState = {
   loginError: null,
 };
 
-export const auth = produce<AuthState, AuthActions>((draft, action) => {
+export const auth = produce((draft, action: AuthActions) => {
   switch (action.type) {
     case getType(authActions.loginActions.request):
       return {
